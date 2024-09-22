@@ -1,0 +1,96 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include<unordered_map>
+#include <set>
+#include <limits>
+#include <cstdlib>
+#define for0(i, n) for (int i = 0; i < (int)(n); ++i)
+#define for1(i, n) for (int i = 1; i <= (int)(n); ++i)
+#define forc(i, l, r) for (int i = (int)(l); i <= (int)(r); ++i)
+#define forr0(i, n) for (int i = (int)(n) - 1; i >= 0; --i)
+#define forr1(i, n) for (int i = (int)(n); i >= 1; --i)
+#define pb push_back
+#define fi first
+#define se second
+#define all(x) (x).begin(), (x).end()
+#define rall(x) (x).rbegin(), (x).rend()
+#define tr(c,i) for(auto i = (c).begin(); i != (c).end(); i++)
+#define present(c,x) ((c).find(x) != (c).end())
+#define cpresent(c,x) (find(all(c),x) != (c).end())
+#define sz(a) int((a).size())
+
+using namespace std;
+typedef vector<int> vi;
+typedef vector<vi> vvi;
+typedef pair<int, int> ii;
+typedef vector<ii> vii;
+typedef long long ll;
+typedef vector<ll> vll;
+typedef vector<vll> vvll;
+typedef double ld;
+
+bool is_unhappy(ll x, ll total_sum, vll a, int n) {
+    ll new_sum = total_sum + x;
+    double half_avg = double(new_sum) / (2 * n);
+    ll idx = std::max_element(a.begin(), a.end()) - a.begin();
+    a[idx]+=x;
+    ll unhappy_count = 0;
+    for (ll wealth : a) {
+        if (wealth < half_avg) {
+            unhappy_count++;
+        }
+    }
+    return unhappy_count > n / 2;
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    
+    vll a(n);
+    ll total_sum = 0;
+    
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        total_sum += a[i];
+    }
+    if (n == 1) {
+        cout << -1 << endl;
+        return;
+    }
+    if (is_unhappy(0, total_sum, a, n)) {
+        cout << 0 << endl;
+        return;
+    }
+    ll left = 0, right = 1e18, answer = -1;
+    while (left <= right) {
+        ll mid = left + (right - left) / 2;
+        
+        if (is_unhappy(mid, total_sum, a, n)) {
+            answer = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1; 
+        }
+    }
+    if (answer == -1) {
+        cout << -1 << endl;
+    } else {
+        cout << answer << endl;
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    
+    int t;
+    cin >> t;
+    
+    while (t--) {
+        solve();
+    }
+    
+    return 0;
+}
